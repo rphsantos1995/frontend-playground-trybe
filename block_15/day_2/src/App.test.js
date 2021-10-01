@@ -34,21 +34,21 @@ describe('Teste da aplicação toda', () => {
     const result = await asyncMock();
    // https://jestjs.io/pt-BR/docs/mock-function-api#mockfnmockresolvedvaluevalue
 
-     // ---- TRYBE -COURSE 15.2
+     // ---- TRYBE -COURSE 15.2 
       // jest.spyOn(global, "fetch")
-      // global.fetch.mockResolvedValue({
-      //   json: jest.fn().mockResolvedValue(pokeSeachResult),
-      // });
+      global.fetch.mockResolvedValue({
+        json: jest.fn().mockResolvedValue(pokeSeachResult),
+      });
 
       // global.fetch = jest.fn(async () => ({
       //   json: async () => pokeSeachResult
       // }));
       // ---- TRYBE -COURSE 15.2
 
-      
+
       const {getByTestId, getByText, findByText } = render(<App />);
 
-
+      // Simulated an api return call
       jest.spyOn(global, "fetch").mockImplementation(setupFetchStub(pokeSeachResult))
       // https://digimon-api.vercel.app/api/digimon/name/
       const res = await fetch('https://digimon-api.vercel.app/api/digimon/name/patamon')
@@ -61,8 +61,6 @@ describe('Teste da aplicação toda', () => {
      expect(getByText('Digimon')).toBeInTheDocument();
      expect(getByText('Search Digimon')).toBeInTheDocument();
     //  expect(getByText('Patamon')).toBeInTheDocument();
-     await findByText('Patamon');
-
 
   });
 
@@ -77,5 +75,38 @@ describe('Teste da aplicação toda', () => {
 
   })
   
+  it ('Testar o retorno no campo search', async () => {
+      const digimon = [{
+        name: "Patamon",
+        img: "https://digimon.shadowsmith.com/img/patamon.jpg",
+        level: "Rookie"}];
+
+        // JOGAR A GLOBAL FETCH DENTRO DE UMA VARIÁVEL
+      const fetchApi = global.fetch.mockResolvedValue({
+        json: jest.fn().mockResolvedValue(digimon),
+      });
+
+      const { getByTestId, findByText, getByAltText } = render(<App />);
+
+      const input = getByTestId('search-input');
+      expect(input).toHaveValue('');
+
+      fireEvent.change(input, { target: { value: 'Patamon' } });
+      expect(input).toHaveValue('Patamon');
+
+      const button = getByTestId('search-button');
+      expect(button).toBeInTheDocument();
+      fireEvent.click(button);
+
+      await findByText('level: Rookie');
+      expect(getByTestId('digimonName')).toBeInTheDocument();
+      expect(getByAltText('Patamon')).toBeInTheDocument();
+
+      expect(fetchApi).toBeCalledTimes(1);
+      expect(fetchApi).toBeCalledWith(
+        'https://digimon-api.vercel.app/api/digimon/name/Agumon', 
+        {"headers": {"User-Agent": "ANYTHING_WILL_WORK_HERE"}}
+      );
+    });
 
 });
