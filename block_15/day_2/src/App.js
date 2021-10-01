@@ -2,10 +2,11 @@ import React from 'react';
 import './App.css';
 import Digimon from './Digimon';
 
+// mec.
 class App extends React.Component {
   constructor() {
     super();
-    this.state = { searchDigimon: '', isFetching: false, errorMessage: '' };
+    this.state = { searchDigimon: '', isFetching: false, errorMessage: '', showReturn: '', };
 
     this.inputValue = this.inputValue.bind(this);
     this.requestDigimon = this.requestDigimon.bind(this);
@@ -20,15 +21,25 @@ class App extends React.Component {
 
   async requestDigimon() {
     const { searchDigimon } = this.state;
+
     if (searchDigimon) {
-      fetch(`https://digimon-api.vercel.app/api/digimon/name/${searchDigimon}`)
-        .then((res) => res.json())
-        .then((results) => this.setState((state) => ({
+      fetch(`https://digimon-api.vercel.app/api/digimon/name/${searchDigimon}`, {
+        headers: {
+          'User-Agent': 'ANYTHING_WILL_WORK_HERE'
+        }
+      })
+        .then((res) => {
+          return res.json()
+        } )
+        .then((results) =>
+        this.setState((state) => ({
           ...state,
           digimon: results[0],
           errorMessage: results.ErrorMsg,
           isFetching: true,
-        })));
+          showReturn: results,
+        }))
+        );
     }
   }
 
@@ -63,3 +74,5 @@ class App extends React.Component {
 }
 
 export default App;
+
+
