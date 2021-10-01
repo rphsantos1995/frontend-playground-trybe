@@ -76,12 +76,13 @@ describe('Teste da aplicação toda', () => {
   })
   
   it ('Testar o retorno no campo search', async () => {
+
       const digimon = [{
         name: "Patamon",
         img: "https://digimon.shadowsmith.com/img/patamon.jpg",
         level: "Rookie"}];
 
-        // JOGAR A GLOBAL FETCH DENTRO DE UMA VARIÁVEL
+        // JOGAR A GLOBAL FETCH DENTRO DE UMA CONSTANTE
       const fetchApi = global.fetch.mockResolvedValue({
         json: jest.fn().mockResolvedValue(digimon),
       });
@@ -104,9 +105,30 @@ describe('Teste da aplicação toda', () => {
 
       expect(fetchApi).toBeCalledTimes(1);
       expect(fetchApi).toBeCalledWith(
-        'https://digimon-api.vercel.app/api/digimon/name/Agumon', 
+        'https://digimon-api.vercel.app/api/digimon/name/Patamon', 
         {"headers": {"User-Agent": "ANYTHING_WILL_WORK_HERE"}}
       );
     });
+
+    it ('Testing for no api call on empty search field', () => {
+      
+      const digimon = [{
+        name: "Patamon",
+        img: "https://digimon.shadowsmith.com/img/patamon.jpg",
+        level: "Rookie"}];
+
+        // JOGAR A GLOBAL FETCH DENTRO DE UMA CONSTANTE
+      const fetchApi = global.fetch.mockResolvedValue({
+        json: jest.fn().mockResolvedValue(digimon),
+      });
+
+      const { getByAltText, getByTestId, getByText } = render(<App />);
+      const inputNome = getByTestId('search-input');
+      const btn = getByTestId('search-button');
+      expect(inputNome).toHaveValue('');
+      userEvent.click(btn);
+      expect(fetchApi).toBeCalledTimes(0);
+
+    })
 
 });
