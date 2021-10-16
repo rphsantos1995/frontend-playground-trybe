@@ -1,16 +1,61 @@
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
 import states from './Estados';
 
 class PersonalForm extends Component {
+  constructor() {
+    super();
+    this.state = {
+      nomezin: '',
+      email: '',
+      CPF: '',
+
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange({ target }) {
+    const { name } = target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    this.setState({
+      [name]: value,
+    });
+  }
+
   render() {
     return (
       <div>
         PersonalForm
         <fieldset>
-          {/* <input type="text" />
-          <input type="text" />
-          <input type="text" />
-          <input type="text" /> */}
+          <label htmlFor="input-nome">
+            Nomezin
+            <input
+              onChange={ this.handleChange }
+              name="nomezin"
+              type="text"
+              id="input-nome"
+            />
+          </label>
+          <label htmlFor="input-email">
+            Email
+            <input
+              onChange={ this.handleChange }
+              name="email"
+              type="text"
+              id="input-email"
+            />
+
+          </label>
+          <label htmlFor="input-cpf">
+            CPF
+            <input
+              onChange={ this.handleChange }
+              name="CPF"
+              type="text"
+              id="input-cpf"
+            />
+
+          </label>
           <select name="Estados" id="select-estados">
             { states.map((item, index) => (
               <option
@@ -20,6 +65,7 @@ class PersonalForm extends Component {
                 {item}
               </option>)) }
           </select>
+          <button type="button">Enviar</button>
         </fieldset>
       </div>
 
