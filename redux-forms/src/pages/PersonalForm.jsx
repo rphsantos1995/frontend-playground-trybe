@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unused-state */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import states from './Estados';
 
 class PersonalForm extends Component {
@@ -65,7 +66,10 @@ class PersonalForm extends Component {
                 {item}
               </option>)) }
           </select>
-          <button type="button">Enviar</button>
+          <button id="submit-btn" type="button">
+            <Link to="/professionalForm">Submit</Link>
+          </button>
+
         </fieldset>
       </div>
 
