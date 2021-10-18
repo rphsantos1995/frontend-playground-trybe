@@ -3,12 +3,12 @@ export const SET_PROFESSIONAL_VALUE = 'SET_PROFESSIONAL_VALUE';
 
 // payload: o valor que você vai utilizar no estado global
 
-const setPersonalValue = (payload) => ({
-  type: SET_PERSONAL_VALUE, payload });
+export const setPersonalValue = (data) => ({
+  type: SET_PERSONAL_VALUE,
+  payload: data });
 
-const setProfessionalValue = (payload) => ({
-  type: SET_PROFESSIONAL_VALUE, payload });
+export const setProfessionalValue = (data) => ({
+  type: SET_PROFESSIONAL_VALUE,
+  payload: data });
 
-export default { setPersonalValue,
-  setProfessionalValue,
-};
+export default { setPersonalValue, setProfessionalValue };

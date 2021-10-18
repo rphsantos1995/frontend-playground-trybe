@@ -2,8 +2,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 // import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import states from './Estados';
-import setPersonalValue from '../redux/actions/action';
+import { setPersonalValue } from '../redux/actions/action';
 
 class PersonalForm extends Component {
   constructor() {
@@ -27,10 +28,10 @@ class PersonalForm extends Component {
   }
 
   onSubmitForm() {
-    const { history, personalDispatchSetValue } = this.props;
+    const { history, dispatchSetValue } = this.props;
     // Disparamos a nossa action através da função importada
     // de actions.js, que apelidamos de dispatchSetValue
-    personalDispatchSetValue(this.state);
+    dispatchSetValue(this.state);
     history.push('/professionalform');
   }
 
@@ -93,7 +94,7 @@ class PersonalForm extends Component {
 }
 
 PersonalForm.propTypes = {
-  personalDispatchSetValue: PropTypes.func.isRequired,
+  dispatchSetValue: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -101,7 +102,7 @@ PersonalForm.propTypes = {
 
 // Serve pra enviar o estado do componente para o estado global!
 const mapDispatchToProps = (dispatch) => ({
-  personalDispatchSetValue: (data) => dispatch(setPersonalValue(data)),
+  dispatchSetValue: (data) => dispatch(setPersonalValue(data)),
 });
 
 // Serve pra connectar o componente com o estado global.
