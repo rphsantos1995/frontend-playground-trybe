@@ -1,7 +1,9 @@
 /* eslint-disable react/no-unused-state */
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import states from './Estados';
+import setPersonalValue from '../redux/actions/action';
 
 class PersonalForm extends Component {
   constructor() {
@@ -13,6 +15,7 @@ class PersonalForm extends Component {
 
     };
     this.handleChange = this.handleChange.bind(this);
+    this.onSubmitForm = this.onSubmitForm.bind(this);
   }
 
   handleChange({ target }) {
@@ -21,6 +24,14 @@ class PersonalForm extends Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  onSubmitForm() {
+    const { history, personalDispatchSetValue } = this.props;
+    // Disparamos a nossa action através da função importada
+    // de actions.js, que apelidamos de dispatchSetValue
+    personalDispatchSetValue(this.state);
+    history.push('/professionalform');
   }
 
   render() {
@@ -66,8 +77,12 @@ class PersonalForm extends Component {
                 {item}
               </option>)) }
           </select>
-          <button id="submit-btn" type="button">
-            <Link to="/professionalForm">Submit</Link>
+          <button
+            id="submit-btn"
+            type="button"
+            onClick={ this.onSubmitForm }
+          >
+            Enviar
           </button>
 
         </fieldset>
@@ -77,4 +92,17 @@ class PersonalForm extends Component {
   }
 }
 
-export default PersonalForm;
+PersonalForm.propTypes = {
+  personalDispatchSetValue: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
+
+// Serve pra enviar o estado do componente para o estado global!
+const mapDispatchToProps = (dispatch) => ({
+  personalDispatchSetValue: (data) => dispatch(setPersonalValue(data)),
+});
+
+// Serve pra connectar o componente com o estado global.
+export default connect(null, mapDispatchToProps)(PersonalForm);

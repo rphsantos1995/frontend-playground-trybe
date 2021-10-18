@@ -1,6 +1,9 @@
 /* eslint-disable react/no-unused-state */
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import setProfessionalValue from '../redux/actions/action';
 
 class ProfessionalForm extends Component {
   constructor() {
@@ -20,6 +23,14 @@ class ProfessionalForm extends Component {
     this.setState({
       [name]: value,
     });
+  }
+
+  onSubmitForm() {
+    const { history, professionalDispatchSetValue } = this.props;
+    // Disparamos a nossa action através da função importada
+    // de actions.js, que apelidamos de dispatchSetValue
+    professionalDispatchSetValue(this.state);
+    history.push('/professionalform');
   }
 
   render() {
@@ -62,4 +73,15 @@ class ProfessionalForm extends Component {
   }
 }
 
-export default ProfessionalForm;
+ProfessionalForm.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  professionalDispatchSetValue: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  professionalDispatchSetValue: (payload) => dispatch(setProfessionalValue(payload)),
+});
+
+export default connect(null, mapDispatchToProps)(ProfessionalForm);
